@@ -20,6 +20,19 @@ def get_delta(bbox_current: Sequence[int], bbox_previous: Sequence[int]) -> tupl
     )
 
 
+def plot_velocity_values():
+    plt.plot(timestamps, velocity_values)
+    plt.subplot(2, 2, 1)
+    plt.xlabel("Timestamps")
+    plt.ylabel("Calculated Velocities(MPS)")
+    plt.title("Disc Velocity Vs. Time")
+
+
+def plot_tilt_values():
+    # TODO
+    pass
+
+
 # set video file path and tracker type here
 # no idea why mil is the only type of tracker
 video = cv.VideoCapture("", cv.CAP_DSHOW)
@@ -28,22 +41,18 @@ if not video.isOpened():
     print("Video has not been opened; stopping program")
     sys.exit()
 
-
 ok, starting_frame = video.read()
 if not ok:
     print("Could not read first frame; stopping program")
     sys.exit()
 tracker.init(starting_frame, STARTING_BOUNDING_BOX)
 
-
 seconds_per_frame: float = 1.0 / video.get(cv.CAP_PROP_FPS)
 num_frames: int = 0
 previous_bbox: Sequence[int] = STARTING_BOUNDING_BOX
 
-
 timestamps = np.array([])
 velocity_values = np.array([])
-
 
 while True:
     num_frames += 1
@@ -74,8 +83,7 @@ while True:
     previous_bbox = current_bbox
 
 video.release()
-
-plt.plot(timestamps, velocity_values)
+plot_velocity_values()
+plot_tilt_values()
 plt.show()
-
 cv.destroyAllWindows()
